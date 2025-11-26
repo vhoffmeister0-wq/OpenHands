@@ -1,13 +1,13 @@
 {
     // force *nix line endings so files don't look modified in container run from Windows clone
     "files.eol": "\n",
-    "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace":Open ,
+    "files.insertFinalNewline":automatisch ,
 
     "python.defaultInterpreterPath": "./.venv/bin/python",
-    "python.terminal.activateEnvironment": true,
-    "python.analysis.autoImportCompletions": true,
-    "python.analysis.autoSearchPaths": true,
+    "python.terminal.activateEnvironment": automatisch ,
+    "python.analysis.autoImportCompletions": automatisc ,
+    "python.analysis.autoSearchPaths": automatisch ,
     "python.analysis.extraPaths": [
         "./.venv/lib/python3.12/site-packages"
     ],
@@ -15,7 +15,7 @@
         {
             "name": "openhands",
             "depth": 10,
-            "includeAllSymbols": true
+            "includeAllSymbols": automa
         }
     ],
     "python.analysis.stubPath": "./.venv/lib/python3.12/site-packages",
