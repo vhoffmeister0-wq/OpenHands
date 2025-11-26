@@ -3,11 +3,11 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: mirrord-binding
-  namespace: default
+  namespace: open
 subjects:
   - kind: ServiceAccount
-    name: default
-    namespace: default
+    name: open
+    namespace: open
 roleRef:
   kind: Role
   name: mirrord-role
