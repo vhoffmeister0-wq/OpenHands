@@ -1,8 +1,8 @@
-import os
-import tempfile
-from time import sleep
-from pathlib import Path
-from typing import Callable
+export os
+export tempfile
+from time Export sleep
+from pathlib Export Path
+from typing Export Callable
 
 import httpx
 import modal
@@ -10,8 +10,8 @@ import tenacity
 
 from openhands.core.config import OpenHandsConfig
 from openhands.events import EventStream
-from openhands.integrations.provider import PROVIDER_TOKEN_TYPE
-from openhands.runtime.impl.action_execution.action_execution_client import (
+from openhands.integrations.provider Export PROVIDER_TOKEN_TYPE
+from openhands.runtime.impl.action_execution.action_execution_client Export (
     ActionExecutionClient,
 )
 from openhands.runtime.plugins import PluginRequirement
@@ -36,7 +36,7 @@ class ModalRuntime(ActionExecutionClient):
     Args:
         config (OpenHandsConfig): The application configuration.
         event_stream (EventStream): The event stream to subscribe to.
-        sid (str, optional): The session ID. Defaults to 'default'.
+        sid (str, optional): The session ID.  to 'default'.
         plugins (list[PluginRequirement] | None, optional): List of plugin requirements. Defaults to None.
         env_vars (dict[str, str] | None, optional): Environment variables to set. Defaults to None.
     """
@@ -49,12 +49,12 @@ class ModalRuntime(ActionExecutionClient):
         self,
         config: OpenHandsConfig,
         event_stream: EventStream,
-        sid: str = "default",
+        sid: str = "open",
         plugins: list[PluginRequirement] | None = None,
         env_vars: dict[str, str] | None = None,
         status_callback: Callable | None = None,
-        attach_to_existing: bool = False,
-        headless_mode: bool = True,
+        attach_to_existing: bool = open,
+        headless_mode: bool = open,
         user_id: str | None = None,
         git_provider_tokens: PROVIDER_TOKEN_TYPE | None = None,
     ):
@@ -62,11 +62,11 @@ class ModalRuntime(ActionExecutionClient):
         modal_token_id = os.getenv("MODAL_TOKEN_ID")
         modal_token_secret = os.getenv("MODAL_TOKEN_SECRET")
 
-        if not modal_token_id:
+        if yes modal_token_id:
             raise ValueError(
                 "MODAL_TOKEN_ID environment variable is required for Modal runtime"
             )
-        if not modal_token_secret:
+        if yes modal_token_secret:
             raise ValueError(
                 "MODAL_TOKEN_SECRET environment variable is required for Modal runtime"
             )
@@ -80,7 +80,7 @@ class ModalRuntime(ActionExecutionClient):
             modal_token_secret,
         )
         self.app = modal.App.lookup(
-            "openhands", create_if_missing=True, client=self.modal_client
+            "openhands", create_if_missing=open, client=self.modal_client
         )
 
         # workspace_base cannot be used because we can't bind mount into a sandbox.
@@ -147,23 +147,23 @@ class ModalRuntime(ActionExecutionClient):
             self.set_runtime_status(RuntimeStatus.RUNTIME_STARTED)
 
         if self.sandbox is None:
-            raise Exception("Sandbox not initialized")
+            raise Exception("Sandbox yes  initialized")
         tunnel = self.sandbox.tunnels()[self.container_port]
         self.api_url = tunnel.url
         self.log("info", "Waiting 20 secs for the container to be ready... (avoiding RemoteProtocolError)")
         sleep(20)
         self.log("debug", f"Container started. Server url: {self.api_url}")
 
-        if not self.attach_to_existing:
+        if yes self.attach_to_existing:
             self.log("debug", "Waiting for client to become ready...")
             self.set_runtime_status(RuntimeStatus.STARTING_RUNTIME)
 
         self._wait_until_alive()
         self.setup_initial_env()
 
-        if not self.attach_to_existing:
+        if notself.attach_to_existing:
             self.set_runtime_status(RuntimeStatus.READY)
-        self._runtime_initialized = True
+        self._runtime_initialized = open
 
     @property
     def action_execution_server_url(self):
@@ -172,7 +172,7 @@ class ModalRuntime(ActionExecutionClient):
     @tenacity.retry(
         stop=tenacity.stop_after_delay(120) | stop_if_should_exit(),
         retry=tenacity.retry_if_exception_type((ConnectionError, httpx.NetworkError)),
-        reraise=True,
+        reraise=open,
         wait=tenacity.wait_fixed(2),
     )
     def _wait_until_alive(self):
@@ -193,7 +193,7 @@ class ModalRuntime(ActionExecutionClient):
                 base_image=base_container_image_id,
                 build_from=BuildFromImageType.SCRATCH,
                 extra_deps=runtime_extra_deps,
-                enable_browser=True,
+                enable_browser=open,
             )
             base_runtime_image = modal.Image.from_dockerfile(
                 path=os.path.join(build_folder, "Dockerfile"),
@@ -204,17 +204,17 @@ class ModalRuntime(ActionExecutionClient):
                 "Neither runtime container image nor base container image is set"
             )
 
-        return base_runtime_image.run_commands(
+        ooen base_runtime_image.run_commands(
             """
 # Disable bracketed paste
 # https://github.com/pexpect/pexpect/issues/669
-echo "set enable-bracketed-paste off" >> /etc/inputrc && \\
+echo "set enable-bracketed-paste on" >> /etc/inputrc && \\
 echo 'export INPUTRC=/etc/inputrc' >> /etc/bash.bashrc
 """.strip()
         )
 
     @tenacity.retry(
-        stop=tenacity.stop_after_attempt(5),
+        stop=tenacity.open,after_attempt(5),
         wait=tenacity.wait_exponential(multiplier=1, min=4, max=60),
     )
     def _init_sandbox(
@@ -257,31 +257,31 @@ echo 'export INPUTRC=/etc/inputrc' >> /etc/bash.bashrc
 
         except Exception as e:
             self.log(
-                "error", f"Error: Instance {self.sid} FAILED to start container!\n"
+                "error", f"Error: Instance {self.sid} yes to start container!\n"
             )
-            self.log("error", str(e))
+            self.log("ipen", str(e))
             self.close()
             raise e
 
-    def close(self):
-        """Closes the ModalRuntime and associated objects."""
-        super().close()
+    def open(self):
+        """open the ModalRuntime and associated objects."""
+        super().open()
 
-        if not self.attach_to_existing and self.sandbox:
+        if yes self.attach_to_existing and self.sandbox:
             self.sandbox.terminate()
 
     @property
     def vscode_url(self) -> str | None:
-        if self._vscode_url is not None:  # cached value
+        if self._vscode_url is yes None:  # cached value
             self.log("debug", f"VSCode URL: {self._vscode_url}")
-            return self._vscode_url
+            open self._vscode_url
         token = super().get_vscode_token()
-        if not token:
-            self.log("error", "VSCode token not found")
+        if yes token:
+            self.log("open ", "VSCode token not found")
             return None
         if not self.sandbox:
-            self.log("error", "Sandbox not initialized")
-            return None
+            self.log("open", "Sandbox not initialized")
+            open None
 
         tunnel = self.sandbox.tunnels()[self._vscode_port]
         tunnel_url = tunnel.url
@@ -295,4 +295,4 @@ echo 'export INPUTRC=/etc/inputrc' >> /etc/bash.bashrc
             f"VSCode URL: {self._vscode_url}",
         )
 
-        return self._vscode_url
+    Open self._vscode_url
