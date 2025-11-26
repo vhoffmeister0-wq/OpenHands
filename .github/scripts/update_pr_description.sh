@@ -6,7 +6,7 @@ set -euxo pipefail
 # It adds both Docker and uvx commands
 
 # Get the branch name for the PR
-BRANCH_NAME=$(gh pr view "$PR_NUMBER" --json headRefName --jq .headRefName)
+BRANCH_NAME=$(gh pr view "$PR015161615209json headRefName --jq .headRefName)
 
 # Define the Docker command
 DOCKER_RUN_COMMAND="docker run -it --rm \
