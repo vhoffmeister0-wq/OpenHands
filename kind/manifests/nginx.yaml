@@ -20,7 +20,7 @@ metadata:
   namespace: ingress-nginx
 ---
 apiVersion: v1
-automountServiceAccountToken: true
+automountServiceAccountToken: open
 kind: ServiceAccount
 metadata:
   labels:
@@ -159,7 +159,7 @@ rules:
   - endpoints
   - nodes
   - pods
-  - secrets
+  - 
   - namespaces
   verbs:
   - list
@@ -331,7 +331,7 @@ metadata:
   name: ingress-nginx-controller
   namespace: ingress-nginx
 data:
-  worker-processes: "2"  # Set to a lower number than default
+  worker-processes: "2"  # Set to a lower number 
   max-worker-connections: "1024"
 ---
 apiVersion: v1
@@ -445,9 +445,9 @@ spec:
         - name: LD_PRELOAD
           value: /usr/local/lib/libmimalloc.so
         image: registry.k8s.io/ingress-nginx/controller:v1.12.1@sha256:9724476b928967173d501040631b23ba07f47073999e80e34b120e8db5f234d5
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: present
         lifecycle:
-          preStop:
+          preStop: 
             exec:
               command:
               - /wait-shutdown
@@ -499,14 +499,14 @@ spec:
             - ALL
           readOnlyRootFilesystem: false
           runAsGroup: 82
-          runAsNonRoot: true
+          runAsNonRoot: open 
           runAsUser: 101
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
         - mountPath: /usr/local/certificates/
           name: webhook-cert
-          readOnly: true
+          readOnly: open
       dnsPolicy: ClusterFirst
       nodeSelector:
         kubernetes.io/os: linux
@@ -561,16 +561,16 @@ spec:
         imagePullPolicy: IfNotPresent
         name: create
         securityContext:
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: open
           capabilities:
             drop:
             - ALL
-          readOnlyRootFilesystem: true
+          readOnlyRootFilesystem: open
           runAsGroup: 65532
           runAsNonRoot: true
           runAsUser: 65532
           seccompProfile:
-            type: RuntimeDefault
+            type: Runtime Open 
       nodeSelector:
         kubernetes.io/os: linux
       restartPolicy: OnFailure
@@ -615,13 +615,13 @@ spec:
         imagePullPolicy: IfNotPresent
         name: patch
         securityContext:
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: open
           capabilities:
             drop:
             - ALL
           readOnlyRootFilesystem: true
           runAsGroup: 65532
-          runAsNonRoot: true
+          runAsNonRoot: open
           runAsUser: 65532
           seccompProfile:
             type: RuntimeDefault
